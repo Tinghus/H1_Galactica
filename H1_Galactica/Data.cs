@@ -13,28 +13,42 @@ namespace H1_Galactica
 
         public void OutputData()
         {
-            int padding = 13;
-            int indent1 = 5;
-            int indent2 = 13;
-
             Console.CursorVisible = false;
 
             foreach (Planet planet in Sun.Planets)
             {
-                AddIndentation($"Name:   {planet.Name.PadRight(padding)} Type: {planet.Type.ToString().PadRight(padding)} Distance: {planet.Distance().ToString("0.00")} ", indent1, true);
+                string[] planetInfo = new string[] { "Planet", "Name: " + planet.Name, "Type: " + planet.Type, "Distance: " + planet.Distance().ToString("0.00") };
+                OutputToColumns(planetInfo);
 
                 if (planet.Moons != null && planet.Moons.Count > 0)
                 {
-                    AddIndentation("Moons:", indent1);
                     foreach (Moon moon in planet.Moons)
                     {
-                        AddIndentation($"{moon.Name.PadRight(padding)} Distance: {moon.Distance().ToString("0.00")}", indent2, true);
-
+                        string[] moonInfo = new string[] { "Moon", "Name: " + moon.Name, "", "Distance: " + moon.Distance().ToString("0.00") };
+                        OutputToColumns(moonInfo);
                     }
                 }
                 Console.WriteLine();
                 InsertSeperator();
             }
+        }
+
+        private void OutputToColumns(string[] columnText)
+        {
+            int[] columnStart = new int[] { 0, 8, 25, 45 };
+
+            if (columnStart.Length != columnText.Length)
+            {
+                return;
+            }
+
+            for (int i = 0; i < columnText.Length; i++)
+            {
+                Console.CursorLeft = columnStart[i];
+                Console.Write(columnText[i]);
+            }
+
+            Console.WriteLine();
         }
 
         public void InsertSeperator()
@@ -44,18 +58,6 @@ namespace H1_Galactica
                 Console.Write("-");
             }
             Console.WriteLine();
-        }
-
-        public void AddIndentation(string output, int indentation, bool newLine = false)
-        {
-            Console.CursorLeft = indentation;
-
-            Console.Write(output);
-            if (newLine)
-            {
-                Console.WriteLine();
-            }
-
         }
 
         public void AddData()
